@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parking System</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(120deg, #a1c4fd, #c2e9fb);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        body {
+    background-image: url('https://i.pinimg.com/originals/48/5c/8b/485c8bda0daef05b80de5c6c37f70f5a.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    height: 100vh;
+}
+
+
+        .container {
+            background: linear-gradient(145deg, #ffffff, #e6e6e6);
+            border-radius: 15px;
+            box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.2),
+                        -5px -5px 15px rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            width: 300px;
+            text-align: center;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        label {
+            font-size: 16px;
+            color: #555;
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        input {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            width: 100%;
+            box-sizing: border-box;
+            box-shadow: inset 3px 3px 8px rgba(0, 0, 0, 0.1),
+                        inset -3px -3px 8px rgba(255, 255, 255, 0.7);
+        }
+
+        button {
+            background: linear-gradient(145deg, #4caf50, #43a047);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 48%;
+            margin: 10px 1%;
+            transition: transform 0.2s, background 0.3s;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            background: linear-gradient(145deg, #45a049, #3c9a42);
+        }
+
+        .parking-status {
+            margin-top: 20px;
+        }
+
+        .parking-status ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        .parking-status li {
+            background-color: #f1f1f1;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 16px;
+            box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.1),
+                        -3px -3px 8px rgba(255, 255, 255, 0.5);
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .parking-status li:hover {
+            transform: scale(1.05);
+        }
+
+        .available {
+            background: #e7f7e5;
+            color: #4caf50;
+        }
+
+        .occupied {
+            background: #f7e5e5;
+            color: #f44336;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Parking System</h1>
+
+        <div>
+            <label for="spotNumber">Enter Spot Number:</label>
+            <input type="number" id="spotNumber" min="1" max="5">
+        </div>
+        <div>
+            <label for="vehicleNumber">Enter Vehicle Number:</label>
+            <input type="text" id="vehicleNumber">
+        </div>
+        <div>
+            <button onclick="parkCar()">Park Car</button>
+            <button onclick="vacateSpot()">Vacate Spot</button>
+        </div>
+
+        <div class="parking-status">
+            <h2>Parking Status:</h2>
+            <ul id="parkingList"></ul>
+        </div>
+    </div>
+
+    <script>
+        let parkingSpots = [
+            { spotNumber: 1, isOccupied: false, vehicleNumber: null },
+            { spotNumber: 2, isOccupied: false, vehicleNumber: null },
+            { spotNumber: 3, isOccupied: false, vehicleNumber: null },
+            { spotNumber: 4, isOccupied: false, vehicleNumber: null },
+            { spotNumber: 5, isOccupied: false, vehicleNumber: null }
+        ];
+
+        function renderParkingSpots() {
+            const parkingList = document.getElementById("parkingList");
+            parkingList.innerHTML = '';
+            parkingSpots.forEach(spot => {
+                const li = document.createElement("li");
+                li.textContent = `Spot ${spot.spotNumber}: ${spot.isOccupied ? `Occupied by ${spot.vehicleNumber}` : 'Available'}`;
+                li.classList.add(spot.isOccupied ? "occupied" : "available");
+                parkingList.appendChild(li);
+            });
+        }
+
+        function parkCar() {
+            const spotNumber = parseInt(document.getElementById("spotNumber").value);
+            const vehicleNumber = document.getElementById("vehicleNumber").value;
+
+            if (spotNumber > 0 && spotNumber <= 5) {
+                const spot = parkingSpots.find(spot => spot.spotNumber === spotNumber);
+                if (!spot.isOccupied) {
+                    spot.isOccupied = true;
+                    spot.vehicleNumber = vehicleNumber;
+                    alert(`Car parked at Spot ${spotNumber}`);
+                } else {
+                    alert(`Spot ${spotNumber} is already occupied.`);
+                }
+            } else {
+                alert("Invalid spot number.");
+            }
+
+            renderParkingSpots();
+        }
+
+        function vacateSpot() {
+            const spotNumber = parseInt(document.getElementById("spotNumber").value);
+
+            if (spotNumber > 0 && spotNumber <= 5) {
+                const spot = parkingSpots.find(spot => spot.spotNumber === spotNumber);
+                if (spot.isOccupied) {
+                    spot.isOccupied = false;
+                    spot.vehicleNumber = null;
+                    alert(`Spot ${spotNumber} has been vacated.`);
+                } else {
+                    alert(`Spot ${spotNumber} is already vacant.`);
+                }
+            } else {
+                alert("Invalid spot number.");
+            }
+
+            renderParkingSpots();
+        }
+
+        // Initial render
+        renderParkingSpots();
+    </script>
+</body>
+</html>
